@@ -16,7 +16,8 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(), index = True, unique = True)
     parent_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    parent = db.relationship('Category', backref = db.backref('categories', lazy='dynamic'))
+    #parent = db.relationship('Category', backref = db.backref('categories', lazy='dynamic'))
+    parent = db.relationship('Category', lazy='dynamic')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref = db.backref('categories', lazy='dynamic'))
 
