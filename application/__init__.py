@@ -3,6 +3,7 @@ from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import os
+#from models import User
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -19,6 +20,7 @@ from application import models, views
 
 @login_manager.user_loader
 def load_user(userid):
-    return db.session.query(User).filter(User.id == userId).first()
+    from models import User
+    return db.session.query(User).filter(User.id == userid).first()
 
 

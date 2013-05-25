@@ -1,8 +1,12 @@
-from flask import Flask, g, request
+from flask import Flask, g, request, flash
 from flask import render_template, url_for, redirect
-from application import app
+from flask_login import login_user
 from models import User
+from application import app, db
 from forms import LoginForm
+import hashlib
+
+
 
 @app.route('/')
 def index():
@@ -14,14 +18,17 @@ def login():
         return redirect(url_for('index'))
 
     form = LoginForm(request.form)
+
     if request.method == "POST" and form.validate():
+        
         # login and validate the user...
-        user = db.session.query(User).filter(User.username == form.username).first()
+        user = db.session.query(User).filter(User.username == form.username.data).first()
         if user is None:
             flash("User does not exist or password is incorrect")
         else:
-            phash = hashlib.sha256(form.password+user.salt)
-            if phash == user.password:
+            phash = hashlib.sha256(form.password.data+user.salt)
+            print(phash.hexdigest() + " = " + user.password) 
+            if phash.hexdigest() == user.password:
                 login_user(user)
                 flash("Logged in successfully.")
                 return redirect(request.args.get("next") or url_for("index"))
